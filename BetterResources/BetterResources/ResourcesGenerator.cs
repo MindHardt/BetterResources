@@ -67,16 +67,21 @@ public class ResourcesGenerator : ISourceGenerator
                   {
                   
                   """;
-            var fileBuilder = new StringBuilder(classHeader);
 
-            var resourceLines = lines.Skip(1).Select(x => x.ToString().Split(Separator));
-            foreach (var resourceRow in resourceLines)
+            var fileBuilder = new StringBuilder(classHeader);
+            foreach (var resourceLine in lines.Skip(1))
             {
+                var row = resourceLine.ToString();
+                if (row.StartsWith("#") || string.IsNullOrWhiteSpace(row))
+                {
+                    continue;
+                }
+                var resourceRow = row.Split(Separator);
+
                 var resourceName = resourceRow[nameIndex];
                 resourceNames.Add(resourceName);
 
                 var defaultResource = resourceRow[defaultIndex];
-
                 var cultureResources = resourceRow
                     .Skip(2)
                     .Select((resource, index) => (culture: cultureIndices[index + 2], resource));
