@@ -109,10 +109,23 @@ public class ResourcesGenerator : ISourceGenerator
                                              {
                                          {{string.Join("\n", resourceNames.Select(x => $"\t\tpublic static string {x} => {x}();"))}}
                                              }
-                                         }
                                          """;
-
             fileBuilder.Append(defaultResourceClass);
+
+            var findMethod = $$"""
+                                        
+                                        /// <summary>
+                                        /// Allows accessing resources in this class dynamically.
+                                        /// </summary>
+                                        public string Find(string resourceName, CultureInfo? culture = null) => resourceName switch
+                                        {
+                                    {{string.Join("\n", resourceNames.Select(x => $"\t\t\"{x}\" => {x}(culture),"))}}
+                                            _ => throw new ArgumentException($"Resource with name {resourceName} not found")
+                                        };
+                                    """;
+            fileBuilder.Append(findMethod);
+            fileBuilder.Append("\n}");
+
 
             context.AddSource($"{className}.g.cs", SourceText.From(fileBuilder.ToString(), Encoding.UTF8));
         }
