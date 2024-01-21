@@ -122,7 +122,7 @@ public class ResourcesGenerator : ISourceGenerator
                                         /// <summary>
                                         /// Allows accessing resources in this class dynamically.
                                         /// </summary>
-                                        public string Find(string resourceName, CultureInfo? culture = null) => resourceName switch
+                                        public static string Find(string resourceName, CultureInfo? culture = null) => resourceName switch
                                         {
                                     {{string.Join("\n", resourceNames.Select(x => $"\t\t\"{x}\" => {x}(culture),"))}}
                                             _ => throw new ArgumentException($"Resource with name {resourceName} not found")
