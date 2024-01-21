@@ -58,6 +58,7 @@ public class ResourcesGenerator : ISourceGenerator
                 $$$"""
                   #nullable enable
                   
+                  using System;
                   using System.Threading;
                   using System.Globalization;
                   
@@ -122,11 +123,17 @@ public class ResourcesGenerator : ISourceGenerator
                                         /// <summary>
                                         /// Allows accessing resources in this class dynamically.
                                         /// </summary>
-                                        public static string Find(string resourceName, CultureInfo? culture = null) => resourceName switch
+                                        public static Func<CultureInfo?, string> Find(string resourceName) => resourceName switch
                                         {
-                                    {{string.Join("\n", resourceNames.Select(x => $"\t\t\"{x}\" => {x}(culture),"))}}
+                                    {{string.Join("\n", resourceNames.Select(x => $"\t\t\"{x}\" => {x},"))}}
                                             _ => throw new ArgumentException($"Resource with name {resourceName} not found")
                                         };
+                                        
+                                        /// <summary>
+                                        /// Allows accessing resources in this class dynamically.
+                                        /// </summary>
+                                        public static string Find(string resourceName, CultureInfo? culture = null)
+                                            => Find(resourceName).Invoke(culture);
                                     """;
             fileBuilder.Append(findMethod);
             fileBuilder.Append("\n}");
