@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -45,13 +46,16 @@ public class ResourcesGenerator : ISourceGenerator
             List<string> resourceNames = [];
             var header = lines[0].ToString().Split(Separator);
 
-            const int nameIndex = 0;
-            const int defaultIndex = 1;
+            const string nameIdentifier = "Name";
+            const string defaultCultureIdentifier = "";
+
+            var nameIndex = Array.IndexOf(header, nameIdentifier);
+            var defaultIndex = Array.IndexOf(header, defaultCultureIdentifier);
 
             var cultureIndices = header
-                .Skip(2)
                 .Select((culture, index) => (culture, index))
-                .ToDictionary(x => x.index + 2, x => x.culture);
+                .Where(x => x.culture is not nameIdentifier and not defaultCultureIdentifier)
+                .ToDictionary(x => x.index, x => x.culture);
 
             var className = Path.GetFileNameWithoutExtension(fileName);
             var classHeader =
@@ -84,8 +88,9 @@ public class ResourcesGenerator : ISourceGenerator
 
                 var defaultResource = resourceRow[defaultIndex];
                 var cultureResources = resourceRow
-                    .Skip(2)
-                    .Select((resource, index) => (culture: cultureIndices[index + 2], resource));
+                    .Select((resource, index) => (resource, index))
+                    .Where(x => cultureIndices.ContainsKey(x.index))
+                    .Select(x => (culture: cultureIndices[x.index], x.resource));
 
                 var method = $$"""
                                     /// <summary>
