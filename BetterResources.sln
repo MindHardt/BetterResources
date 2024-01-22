@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterResources", "BetterResources\BetterResources\BetterResources.csproj", "{70A1A0FD-C337-4B57-8875-BCE68976E59B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterResources.Generator", "src\BetterResources.Generator\BetterResources.Generator.csproj", "{70A1A0FD-C337-4B57-8875-BCE68976E59B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterResources.Sample", "BetterResources\BetterResources.Sample\BetterResources.Sample.csproj", "{F4B19846-BD4E-4D12-8A42-B70A99B2F0D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterResources.Sample", "src\BetterResources.Sample\BetterResources.Sample.csproj", "{F4B19846-BD4E-4D12-8A42-B70A99B2F0D1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7A4D1CC7-4C26-4717-9795-9540F5DCCFB4}"
 	ProjectSection(SolutionItems) = preProject
