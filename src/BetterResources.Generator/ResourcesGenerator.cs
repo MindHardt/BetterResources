@@ -97,14 +97,14 @@ public class ResourcesGenerator : ISourceGenerator
                                     /// A resource with default value
                                     /// <code>{{defaultResource}}</code>
                                     /// </summary>
+                                    public static string {{resourceName}}(string culture) => culture switch
+                                    {{{string.Concat(cultureResources.Select(x => $"\n\t\t\"{x.culture}\" => \"{x.resource}\","))}}
+                                        _ => "{{defaultResource}}"
+                                    };
+                                    /// <inheritdoc cref="{{resourceName}}(string)"/>
                                     public static string {{resourceName}}(CultureInfo? culture = null)
-                                    {
-                                        culture ??= Thread.CurrentThread.CurrentCulture;
-                                        return culture.TwoLetterISOLanguageName switch
-                                        {{{string.Concat(cultureResources.Select(x => $"\n\t\t\t\"{x.culture}\" => \"{x.resource}\","))}}
-                                            _ => "{{defaultResource}}"
-                                        };
-                                    }
+                                        => {{resourceName}}((culture ?? Thread.CurrentThread.CurrentCulture).TwoLetterISOLanguageName);
+                                
                                 
                                 """;
 
