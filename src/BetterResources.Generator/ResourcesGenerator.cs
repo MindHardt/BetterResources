@@ -120,15 +120,16 @@ public class ResourcesGenerator : ISourceGenerator
                                              {
                                          {{string.Join("\n", resourceNames.Select(x => $"\t\tpublic static string {x} => {x}();"))}}
                                              }
+                                         
+                                         
                                          """;
             fileBuilder.Append(defaultResourceClass);
 
             var findMethod = $$"""
-                                        
                                         /// <summary>
                                         /// Allows accessing resources in this class dynamically.
                                         /// </summary>
-                                        public static Func<CultureInfo?, string> Find(string resourceName) => resourceName switch
+                                        public static Func<string, string> FindString(string resourceName) => resourceName switch
                                         {
                                     {{string.Join("\n", resourceNames.Select(x => $"\t\t\"{x}\" => {x},"))}}
                                             _ => throw new ArgumentException($"Resource with name {resourceName} not found")
@@ -137,8 +138,23 @@ public class ResourcesGenerator : ISourceGenerator
                                         /// <summary>
                                         /// Allows accessing resources in this class dynamically.
                                         /// </summary>
-                                        public static string Find(string resourceName, CultureInfo? culture = null)
-                                            => Find(resourceName).Invoke(culture);
+                                        public static string FindString(string resourceName, string culture)
+                                            => FindString(resourceName).Invoke(culture);
+                                        
+                                        /// <summary>
+                                        /// Allows accessing resources in this class dynamically.
+                                        /// </summary>
+                                        public static Func<CultureInfo?, string> FindCulture(string resourceName) => resourceName switch
+                                        {
+                                    {{string.Join("\n", resourceNames.Select(x => $"\t\t\"{x}\" => {x},"))}}
+                                            _ => throw new ArgumentException($"Resource with name {resourceName} not found")
+                                        };
+                                        
+                                        /// <summary>
+                                        /// Allows accessing resources in this class dynamically.
+                                        /// </summary>
+                                        public static string FindCulture(string resourceName, CultureInfo? culture = null)
+                                            => FindCulture(resourceName).Invoke(culture);
                                     """;
             fileBuilder.Append(findMethod);
             fileBuilder.Append("\n}");
